@@ -28,7 +28,7 @@ namespace SignalRSimpleChat
             await Clients.All.SendAsync("Send", nick, "disconected");
         }
 
-        public async Task ServerNotifications(string message)
+        public async Task Notify(string message)
         {
             await Clients.All.SendAsync("Send", ServerNick, message);
         }

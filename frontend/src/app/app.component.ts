@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HubConnectionBuilder, HubConnection, LogLevel } from '@aspnet/signalr';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { DocumentChanged, Subscription, RegistrationResponse } from '../models';
+import { XrtDocumentsService } from './xrt-documents.service';
 
 @Component({
   selector: 'app-root',
@@ -16,39 +17,26 @@ export class AppComponent implements OnInit {
   private url = 'http://localhost:53036/chat';
   private hubConnection: HubConnection;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private documentsService: XrtDocumentsService) { }
 
   ngOnInit() {
-
-    this.hubConnection = new HubConnectionBuilder()
-      .withUrl(this.url)
-      .configureLogging(LogLevel.Information)
-      .build();
-
-    this.hubConnection.start().catch(err => console.error(`Error starting hub: ${err}`));
-
-    this.hubConnection.on('Send', (nick, message) => {
-      this.messages.push(`${nick}: ${message}`);
+    this.documentsService.documents$.subscribe(data => {
+      // this.messages = data; // todo uncomment
+      this.messages.push(data); // todo delete
     });
   }
 
   subscribeToHash(): void {
-    this.hubConnection.invoke('JoinGroup', this.filterHash)
-      .catch((err) => this.messages.push(`Error calling JoinGroup: ${err}`));
+    this.documentsService.subscribeToHash(this.filterHash);
   }
 
   unsubscribeToHash() {
-    this.hubConnection.invoke('LeaveGroup', this.filterHash)
-      .catch((err) => this.messages.push(`Error calling LeaveGroup: ${err}`));
-    }
+      this.documentsService.unsubscribeFromHash(this.filterHash);
+  }
 
   sendMessage() {
-    this.hubConnection.invoke('Send', this.filterHash, this.filter)
-      .then(() => {
-        // this.messages.push(`${this.filterHash}: ${this.filter}`);
-        this.filter = '';
-      })
-      .catch((err) => this.messages.push(`Error sending message: ${err}`));
+    this.documentsService.sendMessage(this.filterHash, this.filter);
+    this.filter = '';
   }
 
   clearMessages(): void {
