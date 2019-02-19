@@ -1,0 +1,23 @@
+<h1>
+  SignalR
+</h1>
+
+<div>
+  <label for="filterHash"></label>
+  <input type="text" id="filterHash" name="filterHash" [(ngModel)]="filterHash" style="width: 400px;" />{{' '}}
+  <button (click)="subscribeToHash()">Subscribe</button>
+  <br/>
+  <button (click)="unsubscribeToHash()">Unsubscribe</button>
+  <br/>
+  <br/>
+  <br/>
+  <label for="filter"></label>
+  <input type="text" id="filter" name="filter" [(ngModel)]="filter" style="width: 400px;" />{{' '}}
+  <button (click)="sendMessage()">Send</button>
+  <br/>
+  <button (click)="clearMessages()">Clear Messages</button>
+</div>
+
+<div *ngFor="let message of messages">
+  <div>{{message}}</div>
+</div>
