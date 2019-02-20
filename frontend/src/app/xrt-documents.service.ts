@@ -20,7 +20,7 @@ export class XrtDocumentsService {
 
     this.hubConnection.on('Send', (sender, message) => {
       // this.dataSource.next(message); // todo uncomment
-      this.dataSource.next(`'${sender}: ${message}`); // todo remove
+      this.dataSource.next(`${sender}: ${message}`); // todo remove
     });
   }
 

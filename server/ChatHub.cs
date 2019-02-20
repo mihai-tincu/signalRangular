@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace SignalRSimpleChat
 {    
-    public class Chat : Hub
+    public class Chat : Hub // Hub<Interface>
     {
         public string ServerNick
         {
@@ -30,7 +30,8 @@ namespace SignalRSimpleChat
 
         public async Task Notify(string message)
         {
-            await Clients.All.SendAsync("Send", ServerNick, message);
+            // Clients.Group hash
+               await Clients.All.SendAsync("Send", ServerNick, message);
         }
     }
 }
